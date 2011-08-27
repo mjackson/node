@@ -63,7 +63,7 @@ should continue to send the request body, or generating an appropriate HTTP
 response (e.g., 400 Bad Request) if the client should not continue to send the
 request body.
 
-Note that when this event is emitted and handled, the `request` event will
+Note that when this event is emitted and handled the `'request'` event will
 not be emitted.
 
 ### Event: 'upgrade'
@@ -78,15 +78,15 @@ closed.
 * `socket` is the network socket between the server and client.
 * `head` is an instance of Buffer, the first packet of the upgraded stream, this may be empty.
 
-After this event is emitted, the request's socket will not have a `data`
+After this event is emitted, the request's socket will not have a `'data'`
 event listener, meaning you will need to bind to it in order to handle data
 sent to the server on that socket.
 
 ### Event: 'clientError'
 
-`function (exception) { }`
+`function (err) { }`
 
-If a client connection emits an 'error' event - it will forwarded here.
+If a client connection emits an `'error'` event it will be forwarded here.
 
 ### http.createServer([requestListener])
 
@@ -158,7 +158,7 @@ The `err` parameter is always present and indicates the reason for the timeout:
 This may happen because all incoming connections have a default timeout of 2
 minutes.
 
-`err.code === 'aborted'` means that the client has closed the underlaying
+`err.code === 'aborted'` means that the client has closed the underlying
 connection prematurely.
 
 Just like `'end'`, this event occurs only once per request, and no more `'data'`
@@ -242,15 +242,15 @@ Resumes a paused request.
 The `net.Socket` object associated with the connection.
 
 
-With HTTPS support, use request.connection.verifyPeer() and
-request.connection.getPeerCertificate() to obtain the client's
+With HTTPS support, use `request.connection.verifyPeer()` and
+`request.connection.getPeerCertificate()` to obtain the client's
 authentication details.
 
 
 
 ## http.ServerResponse
 
-This object is created internally by a HTTP server--not by the user. It is
+This object is created internally by a HTTP server -- not by the user. It is
 passed as the second parameter to the `'request'` event. It is a `Writable Stream`.
 
 ### response.writeContinue()
@@ -399,7 +399,7 @@ Options:
 - `path`: Request path. Should include query string and fragments if any.
    E.G. `'/index.html?page=12'`
 - `headers`: An object containing request headers.
-- `agent`: Controls `Agent` behavior. When an Agent is used request will default to 
+- `agent`: Controls `Agent` behavior. When an Agent is used request will default to
    Connection:keep-alive. Possible values:
  - `undefined` (default): use default `Agent` for this host and port.
  - `Agent` object: explicitly use the passed in `Agent`.
@@ -479,21 +479,21 @@ Example:
 
 ## http.Agent
 
-In node 0.5.3+ there is a new implementation of the HTTP Agent which is used 
+In node 0.5.3+ there is a new implementation of the HTTP Agent which is used
 for pooling sockets used in HTTP client requests.
 
-Previously, a single agent instance help the pool for single host+port. The 
+Previously, a single agent instance help the pool for single host+port. The
 current implementation now holds sockets for any number of hosts.
 
-The current HTTP Agent also defaults client requests to using 
-Connection:keep-alive. If no pending HTTP requests are waiting on a socket 
-to become free the socket is closed. This means that node's pool has the 
-benefit of keep-alive when under load but still does not require developers 
+The current HTTP Agent also defaults client requests to using
+Connection:keep-alive. If no pending HTTP requests are waiting on a socket
+to become free the socket is closed. This means that node's pool has the
+benefit of keep-alive when under load but still does not require developers
 to manually close the HTTP clients using keep-alive.
 
-Sockets are removed from the agent's pool when the socket emits either a 
-"close" event or a special "agentRemove" event. This means that if you intend 
-to keep one HTTP request open for a long time and don't want it to stay in the 
+Sockets are removed from the agent's pool when the socket emits either a
+"close" event or a special "agentRemove" event. This means that if you intend
+to keep one HTTP request open for a long time and don't want it to stay in the
 pool you can do something along the lines of:
 
     http.get(options, function(res) {
@@ -501,7 +501,7 @@ pool you can do something along the lines of:
     }).on("socket", function (socket) {
       socket.emit("agentRemove");
     });
-  
+
 Alternatively, you could just opt out of pooling entirely using `agent:false`:
 
     http.get({host:'localhost', port:80, path:'/', agent:false}, function (res) {
@@ -514,17 +514,17 @@ Global instance of Agent which is used as the default for all http client reques
 
 ### agent.maxSockets
 
-By default set to 5. Determines how many concurrent sockets the agent can have 
+By default set to 5. Determines how many concurrent sockets the agent can have
 open per host.
 
 ### agent.sockets
 
-An object which contains arrays of sockets currently in use by the Agent. Do not 
+An object which contains arrays of sockets currently in use by the Agent. Do not
 modify.
 
 ### agent.requests
 
-An object which contains queues of requests that have not yet been assigned to 
+An object which contains queues of requests that have not yet been assigned to
 sockets. Do not modify.
 
 
@@ -644,7 +644,7 @@ A client server pair that show you how to listen for the `upgrade` event using `
 
 ### Event: 'continue'
 
-`function ()`
+`function () { }`
 
 Emitted when the server sends a '100 Continue' HTTP response, usually because
 the request contained 'Expect: 100-continue'. This is an instruction that
@@ -680,17 +680,17 @@ Aborts a request.  (New since v0.3.8.)
 
 ### request.setTimeout(timeout, [callback])
 
-Once a socket is assigned to this request and is connected 
+Once a socket is assigned to this request and is connected
 socket.setTimeout(timeout, [callback]) will be called.
 
 ### request.setNoDelay(noDelay=true)
 
-Once a socket is assigned to this request and is connected 
+Once a socket is assigned to this request and is connected
 socket.setNoDelay(noDelay) will be called.
 
 ### request.setSocketKeepAlive(enable=false, [initialDelay])
 
-Once a socket is assigned to this request and is connected 
+Once a socket is assigned to this request and is connected
 socket.setKeepAlive(enable, [initialDelay]) will be called.
 
 ## http.ClientResponse

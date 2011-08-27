@@ -10,7 +10,7 @@ This class is a subclass of `tls.Server` and emits events same as
 
 ## https.createServer(options, [requestListener])
 
-Returns a new HTTPS web server object. The `options` is similer to
+Returns a new HTTPS web server object. The `options` is similar to
 `tls.createServer()`. The `requestListener` is a function which is
 automatically added to the `'request'` event.
 
